@@ -35,20 +35,37 @@ class SchoolPlanner : public QMainWindow
 public:
     explicit SchoolPlanner(QWidget *parent = 0);
     ~SchoolPlanner();
-    void setAvailableRooms();
+
     void initializeJsonDocument();
     void fillSchedules();
     void initializeRoom(QString room);
 
+    void setAvailableRooms();
+    void setAvailableClasses();
+    void setAvailableTeachers();
+    void setAvailableGroups();
+    QStringList getDataFromJson(QString data);
+
+    void clearAllData();
+
 private slots:
     void on_actionOpen_triggered();
+
+    void on_comboBox_activated(const QString &arg1);
+
+    void on_tableView_doubleClicked(const QModelIndex &index);
 
 private:
     Ui::SchoolPlanner *ui;
     QStandardItemModel *model;
     QString dataFileJson = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
     QJsonDocument jsonDocument;
+    QJsonObject jsonObject;
+
     QStringList roomsList;
+    QStringList teachersList;
+    QStringList groupsList;
+    QStringList classesList;
 };
 
 #endif // SCHOOLPLANNER_H

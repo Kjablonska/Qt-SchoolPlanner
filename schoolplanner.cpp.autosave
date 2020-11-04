@@ -132,4 +132,5 @@ void SchoolPlanner::clearAllData() {
 
 void SchoolPlanner::on_tableView_doubleClicked(const QModelIndex &index) {
     ui->listView->setVisible(true);
+    ui->listView->setH
 }
