@@ -20,6 +20,9 @@
 #include <QVariant>
 #include <QModelIndex>
 
+#include "editform.h"
+#include "schooldata.h"
+
 namespace Ui {
 class SchoolPlanner;
 }
@@ -38,14 +41,6 @@ public:
 
     void initializeJsonDocument();
     void fillSchedules();
-    void initializeRoom(QString room);
-
-    void setAvailableRooms();
-    void setAvailableClasses();
-    void setAvailableTeachers();
-    void setAvailableGroups();
-    QStringList getDataFromJson(QString data);
-
     void clearAllData();
 
 private slots:
@@ -58,14 +53,7 @@ private slots:
 private:
     Ui::SchoolPlanner *ui;
     QStandardItemModel *model;
-    QString dataFileJson = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
-    QJsonDocument jsonDocument;
-    QJsonObject jsonObject;
-
-    QStringList roomsList;
-    QStringList teachersList;
-    QStringList groupsList;
-    QStringList classesList;
+    SchoolData schoolData;
 };
 
 #endif // SCHOOLPLANNER_H

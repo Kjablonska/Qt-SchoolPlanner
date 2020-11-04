@@ -25,13 +25,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        schoolplanner.cpp
+        schoolplanner.cpp \
+    editform.cpp \
+    schooldata.cpp
 
 HEADERS += \
-        schoolplanner.h
+        schoolplanner.h \
+    editform.h \
+    schooldata.h
 
 FORMS += \
-        schoolplanner.ui
+        schoolplanner.ui \
+    editform.ui
 
 RESOURCES += \
     resources.qrc
