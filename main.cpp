@@ -7,7 +7,5 @@ int main(int argc, char *argv[])
     SchoolPlanner w;
     w.show();
 
-
-
     return a.exec();
 }

@@ -2,6 +2,15 @@
 #define EDITFORM_H
 
 #include <QDialog>
+
+#include <QLayoutItem>
+#include <QPushButton>
+
+#include <QVariant>
+
+#include <QLabel>
+#include <QHBoxLayout>
+
 #include "schooldata.h"
 
 namespace Ui {
@@ -17,10 +26,18 @@ public:
     ~EditForm();
 
     void initializeEditForm();
+    void setCurrentData(int column, int row, QString room);
+
+private slots:
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::EditForm *ui;
     SchoolData schoolData;
+    int column, row;
 };
 
 #endif // EDITFORM_H

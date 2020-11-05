@@ -4,7 +4,7 @@
   "classes":["mat","geo","eng","phys","biol"],
   "teachers":["kowalski","nowak","smith","clarkson","may","hammond","atkinson"],
   "activities":[
-    {"room":"110", "group":"1a", "class":"mat", "slot":1, "teacher":"kowalski"},
-    {"room":"121", "group":"1c", "class":"eng", "slot":3, "teacher":"nowak"}
+    {"room":"110", "group":"1a", "class":"mat", "slot":1, "day":"Monday", "teacher":"kowalski"},
+    {"room":"121", "group":"1c", "class":"eng", "slot":3, "day":"Friday", "teacher":"nowak"}
   ]
 }

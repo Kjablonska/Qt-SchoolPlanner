@@ -20,6 +20,9 @@
 #include <QVariant>
 #include <QModelIndex>
 
+#include <QLabel>
+#include <QHBoxLayout>
+
 #include "editform.h"
 #include "schooldata.h"
 

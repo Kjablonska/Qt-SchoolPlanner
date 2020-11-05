@@ -6,7 +6,10 @@ SchoolPlanner::SchoolPlanner(QWidget *parent) :
     ui(new Ui::SchoolPlanner) {
     ui->setupUi(this);
     model = new QStandardItemModel(10,5,this);
-    ui->textEdit->setReadOnly(true);
+
+    QLabel *roomLabel = new QLabel(this);
+    roomLabel->setText("Room");
+    ui->verticalLayout->addWidget(roomLabel);
 
     ui->tableView->setModel(model);
     fillSchedules();
@@ -16,12 +19,13 @@ SchoolPlanner::~SchoolPlanner() {
     delete ui;
 }
 
-// Change.
 void SchoolPlanner::fillSchedules() {
     clearAllData();
     ui->comboBox->clear();
-    schoolData.initializeRoomsWithData(model);
     ui->comboBox->addItems(schoolData.getRoomsList());
+    QString room = ui->comboBox->itemText(ui->comboBox->currentIndex());
+
+    schoolData.setRoomData(model, room);
 }
 
 void SchoolPlanner::on_actionOpen_triggered() {
@@ -52,5 +56,7 @@ void SchoolPlanner::clearAllData() {
 
 void SchoolPlanner::on_tableView_doubleClicked(const QModelIndex &index) {
     EditForm editForm;
+
+    editForm.setCurrentData(index.column(), index.row(), ui->comboBox->itemText(ui->comboBox->currentIndex()));
     editForm.exec();
 }

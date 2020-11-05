@@ -8,11 +8,18 @@
 #include <QJsonArray>
 #include <QStandardItemModel>
 #include <QModelIndex>
+#include <QList>
+#include <QVariant>
+
+#include "activity.h"
+
+#include <QMap>
 
 class SchoolData
 {
 public:
     SchoolData();
+    ~SchoolData();
     QStringList getDataFromJson(QString data);
     void initializeSchoolData();
 
@@ -23,6 +30,7 @@ public:
 
     void initializeRoomsWithData(QStandardItemModel *model);
     void setRoomData(QStandardItemModel *model, QString room);
+    void initializeActivityList();
 
     QStringList getSchoolData(QString data);
 
@@ -38,9 +46,11 @@ private:
     QStringList teachersList;
     QStringList groupsList;
     QStringList classesList;
+    QMap<QString, Activity> map;
 
     QString dataFile = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
     QJsonObject schoolData;
+    QList<Activity> activityList;
 };
 
 #endif // SCHOOLDATA_H

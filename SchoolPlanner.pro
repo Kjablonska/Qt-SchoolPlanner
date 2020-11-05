@@ -27,12 +27,16 @@ SOURCES += \
         main.cpp \
         schoolplanner.cpp \
     editform.cpp \
-    schooldata.cpp
+    schooldata.cpp \
+    activity.cpp \
+    activitylist.cpp
 
 HEADERS += \
         schoolplanner.h \
     editform.h \
-    schooldata.h
+    schooldata.h \
+    activity.h \
+    activitylist.h
 
 FORMS += \
         schoolplanner.ui \
