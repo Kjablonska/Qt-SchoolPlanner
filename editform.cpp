@@ -25,12 +25,15 @@ void EditForm::initializeEditForm() {
     ui->headers->addWidget(headersLabel);
 }
 
-void EditForm::setCurrentData(int column, int row, QString room) {
+void EditForm::setCurrentData(int column, int row, QString group, QString room) {
     QLabel *roomLabel = new QLabel(this);
     roomLabel->setText(room);
     ui->roomName->addWidget(roomLabel);
-    this->column = column;
-    this->row = row;
+
+    activity = schoolData.getSelectedData(room, group, row, column);
+    ui->classes->setCurrentIndex(schoolData.getClassesList().indexOf(activity.getClass()));
+    ui->groups->setCurrentIndex(schoolData.getGroupsList().indexOf(activity.getGroup()));
+    ui->teachers->setCurrentIndex(schoolData.getTeachersList().indexOf(activity.getTeacher()));
 }
 
 // Save button
@@ -47,5 +50,14 @@ void EditForm::on_pushButton_clicked() {
 
 // Cancel button.
 void EditForm::on_pushButton_2_clicked() {
+    EditForm::close();
+}
+
+
+
+
+void EditForm::on_pushButton_3_clicked()
+{
+    schoolData.deleteData(activity);
     EditForm::close();
 }

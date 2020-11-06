@@ -22,6 +22,7 @@
 
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QMap>
 
 #include "editform.h"
 #include "schooldata.h"
@@ -34,6 +35,7 @@ class SchoolPlanner : public QMainWindow
 {
     Q_OBJECT
     const QStringList HORIZONTAL_LABELS = (QStringList() << "Monday" << "Tuesday" << "Wednesday" << "Thursday" << "Friday");
+
     const QStringList VERTICAL_LABELS = (QStringList() << "8:00 - 8:45" << "8:55 - 9:40" << "9:50 - 10:35" << "10:50 - 11:35" << "11:55 - 12:40"
                                          << "12:50 - 13:35" << "13:45 - 14:30" << "14:40 - 15:25" << "15:35 - 16:20" << "16:30 - 17:15");
 
@@ -43,7 +45,8 @@ public:
     ~SchoolPlanner();
 
     void initializeJsonDocument();
-    void fillSchedules();
+    void fillSchedule();
+    void fillRoomData(QString room);
     void clearAllData();
 
 private slots:

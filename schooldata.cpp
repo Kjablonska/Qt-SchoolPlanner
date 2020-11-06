@@ -25,7 +25,7 @@ void SchoolData::initializeSchoolData() {
     setAvailableClasses();
     setAvailableGroups();
     setAvailableTeachers();
-    initializeActivityList();
+    initializeRoomsActivityList();
 }
 
 QStringList SchoolData::getSchoolData(QString data) {
@@ -42,37 +42,66 @@ QStringList SchoolData::getSchoolData(QString data) {
     return dataList;
 }
 
-void SchoolData::setRoomData(QStandardItemModel *model, QString room) {
-    if (activityList.isEmpty())
-        return;
-
-    for (int i = 0; i < activityList.size(); i++) {
-        if (activityList[i].getRoom() == room) {
-            QModelIndex index = model->index(activityList[i].getSlot(), 1, QModelIndex());
-            model->setData(index, activityList[i].getGroup(), Qt::EditRole);
+QList<Activity> SchoolData::getRoomData(QString roomName) {
+    foreach (Room room, roomsActivityList) {
+        if (room.getRoomName() == roomName) {
+            return room.getRoomActivities();
         }
     }
+
+    return QList<Activity>();
 }
 
-void SchoolData::initializeActivityList() {
+Activity SchoolData::getSelectedData(QString roomName, QString group, int slot, int day) {
+    foreach (Room room, roomsActivityList) {
+        if (room.getRoomName() == roomName) {
+            QString key = group+slot+day;
+            return room.getByKey(key);
+        }
+    }
+    Activity act;
+    return act;
+}
+
+void SchoolData::initializeRoomsActivityList() {
+    if (roomsList.empty())
+        return;
     QJsonValue activitiesValues = schoolData.value("activities");
     QJsonArray activitiesJsonArray = activitiesValues.toArray();
 
-    for (int i = 0; i < activitiesJsonArray.size(); i++) {
-        QString room = activitiesJsonArray[i].toObject().value("room").toString();
-        QString group = activitiesJsonArray[i].toObject().value("group").toString();
-        QString clas = activitiesJsonArray[i].toObject().value("class").toString();
-        int slot = activitiesJsonArray[i].toObject().value("slot").toInt();
-        QString day = activitiesJsonArray[i].toObject().value("day").toString();
-        QString teacher = activitiesJsonArray[i].toObject().value("teacher").toString();
+    QList<Activity> roomActivities;
+    for (int j = 0; j < roomsList.size(); j++) {
+        for (int i = 0; i < activitiesJsonArray.size(); i++) {
+            QString room = activitiesJsonArray[i].toObject().value("room").toString();
+            if (room == roomsList[j]) {
+                QString room = activitiesJsonArray[i].toObject().value("room").toString();
+                QString group = activitiesJsonArray[i].toObject().value("group").toString();
+                QString clas = activitiesJsonArray[i].toObject().value("class").toString();
+                QString slot = activitiesJsonArray[i].toObject().value("slot").toString();
+                QString day = activitiesJsonArray[i].toObject().value("day").toString();
+                QString teacher = activitiesJsonArray[i].toObject().value("teacher").toString();
 
-        Activity activity(room, group, clas, slot, day, teacher);
-        activityList.append(activity);
+                Activity activity(room, group, clas, slot.toInt(), 1, teacher);
+                roomActivities.append(activity);
+            }
+        }
+        roomsActivityList.append(Room(roomsList[j], roomActivities));
+        roomActivities.clear();
+    }
+}
+
+void SchoolData::deleteData(Activity activity) {
+    foreach (Room room, roomsActivityList) {
+        if (room.getRoomName() == activity.getRoom()) {
+            QString key = activity.getGroup()+activity.getSlot()+activity.getDay();
+            return room.removeEntry(key);
+        }
     }
 }
 
 void SchoolData::setAvailableRooms() {
     roomsList = getSchoolData("rooms");
+
 }
 
 void SchoolData::setAvailableTeachers() {

@@ -2,7 +2,7 @@
 
 Activity::Activity() {}
 
-Activity::Activity(QString room, QString group, QString clas, int slot, QString day, QString teacher) {
+Activity::Activity(QString room, QString group, QString clas, int slot, int day, QString teacher) {
     this->room = room;
     this->group = group;
     this->clas = clas;
@@ -45,11 +45,11 @@ void Activity::setSlot(int slot) {
     this->slot = slot;
 }
 
-QString Activity::getDay() {
+int Activity::getDay() {
     return day;
 }
 
-void Activity::setDay(QString day) {
+void Activity::setDay(int day) {
     this->day = day;
 }
 

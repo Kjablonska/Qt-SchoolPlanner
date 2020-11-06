@@ -12,6 +12,7 @@
 #include <QVariant>
 
 #include "activity.h"
+#include "room.h"
 
 #include <QMap>
 
@@ -27,14 +28,16 @@ public:
     void setAvailableTeachers();
     void setAvailableClasses();
     void setAvailableGroups();
-
-    void initializeRoomsWithData(QStandardItemModel *model);
-    void setRoomData(QStandardItemModel *model, QString room);
     void initializeActivityList();
+    QList<Activity> getRoomData(QString roomName);
+
+    void initializeRoomsActivityList();
 
     QStringList getSchoolData(QString data);
+    Activity getSelectedData(QString roomName, QString group, int slot, int day);
 
     void setDataFile(QString dataFile);
+    void deleteData(Activity activity);
     QString getDataFile();
     QStringList getRoomsList();
     QStringList getClassesList();
@@ -46,11 +49,11 @@ private:
     QStringList teachersList;
     QStringList groupsList;
     QStringList classesList;
-    QMap<QString, Activity> map;
 
     QString dataFile = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
     QJsonObject schoolData;
-    QList<Activity> activityList;
+
+    QList<Room> roomsActivityList;
 };
 
 #endif // SCHOOLDATA_H

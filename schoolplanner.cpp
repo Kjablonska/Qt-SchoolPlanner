@@ -12,20 +12,28 @@ SchoolPlanner::SchoolPlanner(QWidget *parent) :
     ui->verticalLayout->addWidget(roomLabel);
 
     ui->tableView->setModel(model);
-    fillSchedules();
+    fillSchedule();
 }
 
 SchoolPlanner::~SchoolPlanner() {
     delete ui;
 }
 
-void SchoolPlanner::fillSchedules() {
+void SchoolPlanner::fillSchedule() {
     clearAllData();
     ui->comboBox->clear();
     ui->comboBox->addItems(schoolData.getRoomsList());
     QString room = ui->comboBox->itemText(ui->comboBox->currentIndex());
 
-    schoolData.setRoomData(model, room);
+    fillRoomData(room);
+}
+
+void SchoolPlanner::fillRoomData(QString room) {
+    QList<Activity> activities = schoolData.getRoomData(room);
+    foreach (Activity activity, activities) {
+        QModelIndex index = model->index(activity.getSlot(), 1, QModelIndex());
+        model->setData(index, activity.getGroup(), Qt::EditRole);
+    }
 }
 
 void SchoolPlanner::on_actionOpen_triggered() {
@@ -40,12 +48,12 @@ void SchoolPlanner::on_actionOpen_triggered() {
 
     file.close();
     schoolData.initializeSchoolData();
-    fillSchedules();
+    fillSchedule();
 }
 
 void SchoolPlanner::on_comboBox_activated(const QString &arg1) {
     clearAllData();
-    schoolData.setRoomData(model, arg1);
+    fillRoomData(arg1);
 }
 
 void SchoolPlanner::clearAllData() {
@@ -57,6 +65,9 @@ void SchoolPlanner::clearAllData() {
 void SchoolPlanner::on_tableView_doubleClicked(const QModelIndex &index) {
     EditForm editForm;
 
-    editForm.setCurrentData(index.column(), index.row(), ui->comboBox->itemText(ui->comboBox->currentIndex()));
+    QString roomName = ui->comboBox->itemText(ui->comboBox->currentIndex());
+    editForm.setCurrentData(index.column(), index.row(), model->data(index).toString(), roomName);
     editForm.exec();
+    clearAllData();
+    fillRoomData(roomName);
 }

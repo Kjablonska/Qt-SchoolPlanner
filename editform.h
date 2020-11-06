@@ -26,7 +26,7 @@ public:
     ~EditForm();
 
     void initializeEditForm();
-    void setCurrentData(int column, int row, QString room);
+    void setCurrentData(int column, int row, QString group, QString room);
 
 private slots:
 
@@ -34,10 +34,12 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_pushButton_3_clicked();
+
 private:
     Ui::EditForm *ui;
     SchoolData schoolData;
-    int column, row;
+    Activity activity;
 };
 
 #endif // EDITFORM_H

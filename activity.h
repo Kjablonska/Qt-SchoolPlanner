@@ -7,7 +7,7 @@ class Activity
 {
 public:
     Activity();
-    Activity(QString room, QString group, QString clas, int slot, QString day, QString teacher);
+    Activity(QString room, QString group, QString clas, int slot, int day, QString teacher);
     ~Activity();
 
     QString getRoom();
@@ -16,10 +16,8 @@ public:
     void setGroup(QString group);
     int getSlot();
     void setSlot(int slot);
-    QString getDay();
-    void setDay(QString day);
-
-
+    int getDay();
+    void setDay(int day);
 
     QString getTeacher();
     void setTeacher(QString teacher);
@@ -31,7 +29,7 @@ private:
     QString group;
     QString clas;
     int slot;
-    QString day;
+    int day;
     QString teacher;
 };
 
