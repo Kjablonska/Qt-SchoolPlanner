@@ -29,7 +29,6 @@ SOURCES += \
     editform.cpp \
     schooldata.cpp \
     activity.cpp \
-    activitylist.cpp \
     room.cpp
 
 HEADERS += \
@@ -41,7 +40,8 @@ HEADERS += \
 
 FORMS += \
         schoolplanner.ui \
-    editform.ui
+    editform.ui \
+    editdictionary.ui
 
 RESOURCES += \
     resources.qrc

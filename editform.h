@@ -22,11 +22,11 @@ class EditForm : public QDialog
     Q_OBJECT
 
 public:
-    explicit EditForm(QWidget *parent = 0);
+    EditForm(SchoolData *schoolData, QWidget *parent = 0);
     ~EditForm();
 
     void initializeEditForm();
-    void setCurrentData(int column, int row, QString group, QString room);
+    void setCurrentData(int column, int row, QString room, SchoolData *schoolData);
 
 private slots:
 
@@ -38,8 +38,12 @@ private slots:
 
 private:
     Ui::EditForm *ui;
-    SchoolData schoolData;
-    Activity activity;
+    SchoolData *schoolData;
+
+    int slot;
+    QString day;
+    QString room;
+    QString group;
 };
 
 #endif // EDITFORM_H

@@ -11,6 +11,10 @@
 #include <QList>
 #include <QVariant>
 
+#include <QFileDialog>
+#include <QTextStream>
+#include <QMessageBox>
+
 #include "activity.h"
 #include "room.h"
 
@@ -19,6 +23,16 @@
 class SchoolData
 {
 public:
+
+    QMap<QString, int> DAY_TO_INT = {
+        { "Monday", 0},
+        { "Tuesday", 1},
+        { "Wednesday", 2},
+        { "Thursday", 3},
+        { "Friday", 4}
+    };
+
+
     SchoolData();
     ~SchoolData();
     QStringList getDataFromJson(QString data);
@@ -34,11 +48,18 @@ public:
     void initializeRoomsActivityList();
 
     QStringList getSchoolData(QString data);
-    Activity getSelectedData(QString roomName, QString group, int slot, int day);
+    Activity getSelectedData(QString roomName, int slot, QString day);
 
     void setDataFile(QString dataFile);
-    void deleteData(Activity activity);
+    void deleteData(QString roomName, int slot, QString day);
     QString getDataFile();
+
+    void saveDataToFile();
+
+    void editData(int slot, QString day, QString newClas, QString newGroup, QString newTeacher, QString roomName);
+
+    QJsonValue getActivitiesFromAllRooms();
+
     QStringList getRoomsList();
     QStringList getClassesList();
     QStringList getGroupsList();
@@ -52,8 +73,7 @@ private:
 
     QString dataFile = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
     QJsonObject schoolData;
-
-    QList<Room> roomsActivityList;
+    QList<Room*> roomsActivityList;
 };
 
 #endif // SCHOOLDATA_H

@@ -27,6 +27,7 @@
 #include "editform.h"
 #include "schooldata.h"
 
+
 namespace Ui {
 class SchoolPlanner;
 }
@@ -38,8 +39,6 @@ class SchoolPlanner : public QMainWindow
 
     const QStringList VERTICAL_LABELS = (QStringList() << "8:00 - 8:45" << "8:55 - 9:40" << "9:50 - 10:35" << "10:50 - 11:35" << "11:55 - 12:40"
                                          << "12:50 - 13:35" << "13:45 - 14:30" << "14:40 - 15:25" << "15:35 - 16:20" << "16:30 - 17:15");
-
-
 public:
     explicit SchoolPlanner(QWidget *parent = 0);
     ~SchoolPlanner();
@@ -56,10 +55,16 @@ private slots:
 
     void on_tableView_doubleClicked(const QModelIndex &index);
 
+    void on_actionSave_As_triggered();
+
+    void on_actionSave_triggered();
+
+    void on_actionEdit_rooms_list_triggered();
+
 private:
     Ui::SchoolPlanner *ui;
     QStandardItemModel *model;
-    SchoolData schoolData;
+    SchoolData *schoolData;
 };
 
 #endif // SCHOOLPLANNER_H

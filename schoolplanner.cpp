@@ -11,6 +11,7 @@ SchoolPlanner::SchoolPlanner(QWidget *parent) :
     roomLabel->setText("Room");
     ui->verticalLayout->addWidget(roomLabel);
 
+    schoolData = new SchoolData();
     ui->tableView->setModel(model);
     fillSchedule();
 }
@@ -22,16 +23,16 @@ SchoolPlanner::~SchoolPlanner() {
 void SchoolPlanner::fillSchedule() {
     clearAllData();
     ui->comboBox->clear();
-    ui->comboBox->addItems(schoolData.getRoomsList());
+    ui->comboBox->addItems(schoolData->getRoomsList());
     QString room = ui->comboBox->itemText(ui->comboBox->currentIndex());
 
     fillRoomData(room);
 }
 
 void SchoolPlanner::fillRoomData(QString room) {
-    QList<Activity> activities = schoolData.getRoomData(room);
+    QList<Activity> activities = schoolData->getRoomData(room);
     foreach (Activity activity, activities) {
-        QModelIndex index = model->index(activity.getSlot(), 1, QModelIndex());
+        QModelIndex index = model->index(activity.getSlot(), schoolData->DAY_TO_INT.value(activity.getDay()), QModelIndex());
         model->setData(index, activity.getGroup(), Qt::EditRole);
     }
 }
@@ -39,7 +40,7 @@ void SchoolPlanner::fillRoomData(QString room) {
 void SchoolPlanner::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this, "Open the file");
     QFile file(fileName);
-    schoolData.setDataFile(fileName);
+    schoolData->setDataFile(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, "Warning", "Can not open file :" + file.errorString());
@@ -47,7 +48,7 @@ void SchoolPlanner::on_actionOpen_triggered() {
     }
 
     file.close();
-    schoolData.initializeSchoolData();
+    schoolData->initializeSchoolData();
     fillSchedule();
 }
 
@@ -63,11 +64,24 @@ void SchoolPlanner::clearAllData() {
 }
 
 void SchoolPlanner::on_tableView_doubleClicked(const QModelIndex &index) {
-    EditForm editForm;
+    EditForm editForm(schoolData);
+    ui->comboBox->itemText(ui->comboBox->currentIndex());
 
     QString roomName = ui->comboBox->itemText(ui->comboBox->currentIndex());
-    editForm.setCurrentData(index.column(), index.row(), model->data(index).toString(), roomName);
+    editForm.setCurrentData(index.column(), index.row(), roomName, schoolData);
     editForm.exec();
     clearAllData();
     fillRoomData(roomName);
+}
+
+void SchoolPlanner::on_actionSave_As_triggered() {
+    // Ask user where to save.
+}
+
+void SchoolPlanner::on_actionSave_triggered() {
+    schoolData->saveDataToFile();
+}
+
+void SchoolPlanner::on_actionEdit_rooms_list_triggered() {
+
 }

@@ -59,13 +59,15 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionSave_as"/>
     <addaction name="actionOpen"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="actionSave"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionEdit_rooms_list"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -78,14 +80,24 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="actionSave_as">
-   <property name="text">
-    <string>Save as</string>
-   </property>
-  </action>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="text">
+    <string>Save As</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionEdit_rooms_list">
+   <property name="text">
+    <string>Edit rooms list</string>
    </property>
   </action>
  </widget>
