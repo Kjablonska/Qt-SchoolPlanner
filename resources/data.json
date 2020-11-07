@@ -1,45 +1,10 @@
 {
-    "activities": [
-        {
-            "group": "1a",
-            "room": "110"
-        },
-        {
-            "group": "1c",
-            "room": "121"
-        }
-    ],
-    "classes": [
-        "mat",
-        "geo",
-        "eng",
-        "phys",
-        "biol"
-    ],
-    "groups": [
-        "1a",
-        "1b",
-        "1c",
-        "2a",
-        "2b",
-        "3a",
-        "3b",
-        "4a",
-        "4b"
-    ],
-    "rooms": [
-        "110",
-        "111",
-        "120",
-        "121"
-    ],
-    "teachers": [
-        "kowalski",
-        "nowak",
-        "smith",
-        "clarkson",
-        "may",
-        "hammond",
-        "atkinson"
-    ]
+  "rooms":["110","111","120","121"],
+  "groups":["1a","1b","1c","2a","2b","3a","3b","4a","4b"],
+  "classes":["mat","geo","eng","phys","biol"],
+  "teachers":["kowalski","nowak","smith","clarkson","may","hammond","atkinson"],
+  "activities":[
+    {"room":"110", "group":"1a", "class":"mat", "slot":1, "day":"Monday", "teacher":"kowalski"},
+    {"room":"121", "group":"1c", "class":"eng", "slot":3, "day":"Friday", "teacher":"nowak"}
+  ]
 }

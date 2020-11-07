@@ -136,19 +136,9 @@ void SchoolData::saveDataToFile() {
         obj["group"] = a.getGroup();
         array.append(obj);
     }
-
-    //array.append(jsonData);
-
     jsonData.insert("activities", QJsonValue(array));
 
-    //QJsonObject val;
-    //val["room"] = "101";
-    //val["slot"] = 1;
-    //jsonData.insert("activity", val);
-
-
     QJsonDocument jsonDocument(jsonData);
-    //jsonDocument.setArray(array);
     file.write(jsonDocument.toJson());
     file.close();
 }

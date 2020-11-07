@@ -83,5 +83,6 @@ void SchoolPlanner::on_actionSave_triggered() {
 }
 
 void SchoolPlanner::on_actionEdit_rooms_list_triggered() {
-
+    EditDictionary editDictionary(schoolData, "room");
+    editDictionary.exec();
 }

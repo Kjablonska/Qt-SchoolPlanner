@@ -26,6 +26,7 @@
 
 #include "editform.h"
 #include "schooldata.h"
+#include "editdictionary.h"
 
 
 namespace Ui {
