@@ -17,9 +17,17 @@ public:
     ~EditDictionary();
     void initializeDictionary(SchoolData *schoolData, QString dictionary);
 
+private slots:
+    void on_closeButton_clicked();
+
+    void on_addButton_clicked();
+
+    void on_removeButton_clicked();
+
 private:
     Ui::EditDictionary *ui;
     SchoolData *schoolData;
+    QString dictionary;
 };
 
 #endif // EDITDICTIONARY_H

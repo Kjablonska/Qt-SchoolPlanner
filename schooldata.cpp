@@ -21,11 +21,7 @@ void SchoolData::initializeSchoolData() {
     QJsonDocument jsonDocument = QJsonDocument::fromJson(fileData.toUtf8());
     schoolData = jsonDocument.object();
 
-    setAvailableRooms();
-    setAvailableClasses();
-    setAvailableGroups();
-    setAvailableTeachers();
-    initializeRoomsActivityList();
+    initializeDataFromFile();
 }
 
 QStringList SchoolData::getSchoolData(QString data) {
@@ -35,18 +31,16 @@ QStringList SchoolData::getSchoolData(QString data) {
     QJsonArray dataJsonArray = schoolData.value(data).toArray();
     QStringList dataList;
 
-    for (int i = 0; i < dataJsonArray.size(); i++) {
-        dataList.append(dataJsonArray[i].toString());
-    }
+    foreach (const auto jsonData, dataJsonArray)
+        dataList.append(jsonData.toString());
 
     return dataList;
 }
 
 QList<Activity> SchoolData::getRoomData(QString roomName) {
     foreach (Room *room, roomsActivityList) {
-        if (room->getRoomName() == roomName) {
+        if (room->getRoomName() == roomName)
             return room->getRoomActivities();
-        }
     }
 
     return QList<Activity>();
@@ -80,8 +74,18 @@ void SchoolData::initializeRoomsActivityList() {
                 QString day = activitiesJsonArray[i].toObject().value("day").toString();
                 QString teacher = activitiesJsonArray[i].toObject().value("teacher").toString();
 
-                Activity activity = Activity(room, group, clas, slot, day, teacher);
-                roomActivities.append(activity);
+                if (room.isEmpty() || group.isEmpty() || clas.isEmpty() || slot < 0 || day.isEmpty() || teacher.isEmpty()) {
+                    Warning warning("One of 'activities' data is incorrect\nDo you want to skip it?");
+                    warning.exec();
+
+                    if (!warning.getAcceptance()) {
+                        Activity activity = Activity(room, group, clas, slot, day, teacher);
+                        roomActivities.append(activity);
+                    }
+                } else {
+                    Activity activity = Activity(room, group, clas, slot, day, teacher);
+                    roomActivities.append(activity);
+                }
             }
         }
         Room *newRoom = new Room(roomsList[j], roomActivities);
@@ -100,10 +104,41 @@ void SchoolData::deleteData(QString roomName, int slot, QString day) {
 }
 
 void SchoolData::editData(int slot, QString day, QString newClas, QString newGroup, QString newTeacher, QString roomName) {
+    if (checkEditedData(slot, day, newGroup, roomName)) {
+        Warning warning("Selected group has classes in different rooms at this time.\nIf you proceed, those data will be deleted.\nDo you want to proceed anyway?");
+        warning.exec();
+
+        if (!warning.getAcceptance())
+            return;
+    }
+
+    bool edited = false;
     foreach (Room* room, roomsActivityList) {
         if (room->getRoomName() == roomName) {
-            return room->editEntry(newClas, newGroup, newTeacher, slot, day);
+            edited = room->editEntry(newClas, newGroup, newTeacher, slot, day);
+            break;
         }
+    }
+
+    if (edited)
+        removeOvelapingData(slot, day, newGroup, roomName);
+}
+
+
+// Check if in other rooms there is no such group assigned to the same slot and day. If so, remove it from any other room.
+bool SchoolData::checkEditedData(int slot, QString day, QString newGroup, QString roomName) {
+    foreach (Room *room, roomsActivityList) {
+        if (room->getRoomName() != roomName)
+            return room->checkForOverlapingActivities(slot, day, newGroup);
+    }
+
+    return false;
+}
+
+void SchoolData::removeOvelapingData(int slot, QString day, QString newGroup, QString roomName) {
+    foreach (Room *room, roomsActivityList) {
+        if (room->getRoomName() != roomName)
+            room->removeOverlapingActivities(slot, day, newGroup);
     }
 }
 
@@ -118,51 +153,96 @@ void SchoolData::saveDataToFile() {
     jsonData.insert("classes", QJsonValue(QJsonArray::fromStringList(classesList)));
     jsonData.insert("groups", QJsonValue(QJsonArray::fromStringList(groupsList)));
     jsonData.insert("teachers", QJsonValue(QJsonArray::fromStringList(teachersList)));
-
-
-    QList<Activity> act;
-    foreach (Room * room, roomsActivityList) {
-        foreach (Activity a, room->getRoomActivities())
-            act.append(a);
-    }
-
-
-    QJsonArray array;
-
-    foreach (Activity a, act) {
-        QJsonObject obj;
-
-        obj["room"] = a.getRoom();
-        obj["group"] = a.getGroup();
-        array.append(obj);
-    }
-    jsonData.insert("activities", QJsonValue(array));
+    jsonData.insert("activities", QJsonValue(activitiesToJson()));
 
     QJsonDocument jsonDocument(jsonData);
     file.write(jsonDocument.toJson());
     file.close();
 }
 
+QJsonArray SchoolData::activitiesToJson() {
+    QList<Activity> activitiesList;
+    foreach (Room *room, roomsActivityList)
+        foreach (const Activity activity, room->getRoomActivities())
+            activitiesList.append(activity);
 
-/***********************************************************/
+    QJsonArray activitiesArray;
+    foreach (Activity activity, activitiesList) {
+        QJsonObject jsonObject;
+        jsonObject["room"] = activity.getRoom();
+        jsonObject["group"] = activity.getGroup();
+        jsonObject["class"] = activity.getClass();
+        jsonObject["slot"] = activity.getSlot();
+        jsonObject["day"] = activity.getDay();
+        jsonObject["teacher"] = activity.getTeacher();
+        activitiesArray.append(jsonObject);
+    }
 
-void SchoolData::setAvailableRooms() {
+    return activitiesArray;
+}
+
+void SchoolData::addNewRoom(QString roomName) {
+    roomsList.append(roomName);
+}
+
+void SchoolData::addNewGroup(QString groupName) {
+    groupsList.append(groupName);
+}
+
+void SchoolData::addNewTeacher(QString teacherName) {
+    teachersList.append(teacherName);
+}
+
+void SchoolData::removeRoom(QString roomName) {
+    roomsList.removeOne(roomName);
+
+    foreach(Room *room, roomsActivityList) {
+        if (room->getRoomName() == roomName) {
+            roomsActivityList.removeOne(room);
+            break;
+        }
+    }
+}
+
+void SchoolData::removeGroup(QString groupName) {
+    groupsList.removeOne(groupName);
+
+    foreach(Room *room, roomsActivityList)
+        room->removeAllActivitiesForGroup(groupName);
+}
+
+void SchoolData::removeTeacher(QString teacherName) {
+    teachersList.removeOne(teacherName);
+
+    foreach(Room *room, roomsActivityList)
+        room->removeAllActivitiesForTeacher(teacherName);
+}
+
+void SchoolData::initializeDataFromFile() {
     roomsList = getSchoolData("rooms");
-
-}
-
-void SchoolData::setAvailableTeachers() {
     teachersList = getSchoolData("teachers");
-}
-
-void SchoolData::setAvailableGroups() {
     groupsList = getSchoolData("groups");
-}
-
-void SchoolData::setAvailableClasses() {
     classesList = getSchoolData("classes");
+    initializeRoomsActivityList();
+
+    if (checkDataCorrectness())
+        initializeRoomsActivityList();
 }
 
+bool SchoolData::checkDataCorrectness() {
+    if (roomsList.isEmpty() || groupsList.isEmpty() || classesList.isEmpty() || teachersList.isEmpty()) {
+        Warning warning("Error!\nImported data is incorrect!", true);
+        warning.exec();
+        roomsList.clear();
+        groupsList.clear();
+        classesList.clear();
+        teachersList.clear();
+        return false;
+    }
+    return true;
+}
+
+/*****************************************************************/
 void SchoolData::setDataFile(QString dataFile) {
     this->dataFile = dataFile;
 }

@@ -21,8 +21,14 @@ public:
 
     void removeEntry(QString key);
     void checkIfSuchEntryExists(Activity activity);
-    void editEntry(QString newClas, QString newGroup, QString newTeacher, int slot, QString day);
-    void addEntry(QString group, QString clas, int slot, QString day, QString teacher);
+    bool editEntry(QString newClas, QString newGroup, QString newTeacher, int slot, QString day);
+    bool addEntry(QString group, QString clas, int slot, QString day, QString teacher);
+
+    bool checkForOverlapingActivities(int slot, QString day, QString group);
+    void removeOverlapingActivities(int slot, QString day, QString group);
+
+    void removeAllActivitiesForGroup(QString groupName);
+    void removeAllActivitiesForTeacher(QString teacherName);
 
 private:
     QString roomName;

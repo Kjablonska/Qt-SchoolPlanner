@@ -12,6 +12,7 @@
 #include <QHBoxLayout>
 
 #include "schooldata.h"
+#include "warning.h"
 
 namespace Ui {
 class EditForm;
@@ -27,14 +28,15 @@ public:
 
     void initializeEditForm();
     void setCurrentData(int column, int row, QString room, SchoolData *schoolData);
+    bool checkData(QString newClas, QString newGroup, QString newTeacher);
 
 private slots:
 
-    void on_pushButton_clicked();
+    void on_saveButton_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_cancelButton_clicked();
 
-    void on_pushButton_3_clicked();
+    void on_unassignButton_clicked();
 
 private:
     Ui::EditForm *ui;

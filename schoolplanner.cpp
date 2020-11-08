@@ -30,6 +30,7 @@ void SchoolPlanner::fillSchedule() {
 }
 
 void SchoolPlanner::fillRoomData(QString room) {
+
     QList<Activity> activities = schoolData->getRoomData(room);
     foreach (Activity activity, activities) {
         QModelIndex index = model->index(activity.getSlot(), schoolData->DAY_TO_INT.value(activity.getDay()), QModelIndex());
@@ -53,8 +54,7 @@ void SchoolPlanner::on_actionOpen_triggered() {
 }
 
 void SchoolPlanner::on_comboBox_activated(const QString &arg1) {
-    clearAllData();
-    fillRoomData(arg1);
+    refreshData(arg1);
 }
 
 void SchoolPlanner::clearAllData() {
@@ -70,8 +70,7 @@ void SchoolPlanner::on_tableView_doubleClicked(const QModelIndex &index) {
     QString roomName = ui->comboBox->itemText(ui->comboBox->currentIndex());
     editForm.setCurrentData(index.column(), index.row(), roomName, schoolData);
     editForm.exec();
-    clearAllData();
-    fillRoomData(roomName);
+    refreshData(roomName);
 }
 
 void SchoolPlanner::on_actionSave_As_triggered() {
@@ -82,7 +81,28 @@ void SchoolPlanner::on_actionSave_triggered() {
     schoolData->saveDataToFile();
 }
 
-void SchoolPlanner::on_actionEdit_rooms_list_triggered() {
+void SchoolPlanner::on_actionRooms_triggered() {
     EditDictionary editDictionary(schoolData, "room");
     editDictionary.exec();
+
+    ui->comboBox->clear();
+    ui->comboBox->addItems(schoolData->getRoomsList());
+    refreshData(ui->comboBox->itemText(ui->comboBox->currentIndex()));
+}
+
+void SchoolPlanner::on_actionGroups_triggered() {
+    EditDictionary editDictionary(schoolData, "group");
+    editDictionary.exec();
+    refreshData(ui->comboBox->itemText(ui->comboBox->currentIndex()));
+}
+
+void SchoolPlanner::on_actionTeachers_triggered() {
+    EditDictionary editDictionary(schoolData, "teacher");
+    editDictionary.exec();
+    refreshData(ui->comboBox->itemText(ui->comboBox->currentIndex()));
+}
+
+void SchoolPlanner::refreshData(QString roomName) {
+    clearAllData();
+    fillRoomData(roomName);
 }

@@ -48,6 +48,7 @@ public:
     void fillSchedule();
     void fillRoomData(QString room);
     void clearAllData();
+    void refreshData(QString roomName);
 
 private slots:
     void on_actionOpen_triggered();
@@ -60,7 +61,11 @@ private slots:
 
     void on_actionSave_triggered();
 
-    void on_actionEdit_rooms_list_triggered();
+    void on_actionRooms_triggered();
+
+    void on_actionGroups_triggered();
+
+    void on_actionTeachers_triggered();
 
 private:
     Ui::SchoolPlanner *ui;

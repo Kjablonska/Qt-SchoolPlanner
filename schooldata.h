@@ -17,6 +17,7 @@
 
 #include "activity.h"
 #include "room.h"
+#include "warning.h"
 
 #include <QMap>
 
@@ -38,10 +39,7 @@ public:
     QStringList getDataFromJson(QString data);
     void initializeSchoolData();
 
-    void setAvailableRooms();
-    void setAvailableTeachers();
-    void setAvailableClasses();
-    void setAvailableGroups();
+    void initializeDataFromFile();
     void initializeActivityList();
     QList<Activity> getRoomData(QString roomName);
 
@@ -55,10 +53,25 @@ public:
     QString getDataFile();
 
     void saveDataToFile();
+    QJsonArray activitiesToJson();
 
     void editData(int slot, QString day, QString newClas, QString newGroup, QString newTeacher, QString roomName);
 
     QJsonValue getActivitiesFromAllRooms();
+
+    void addNewRoom(QString roomName);
+    void removeRoom(QString roomName);
+
+    bool checkEditedData(int slot, QString day, QString newGroup, QString roomName);
+    void removeOvelapingData(int slot, QString day, QString newGroup, QString roomName);
+
+    void removeGroup(QString groupName);
+    void addNewGroup(QString groupName);
+
+    void removeTeacher(QString teacherName);
+    void addNewTeacher(QString teacherName);
+
+    bool checkDataCorrectness();
 
     QStringList getRoomsList();
     QStringList getClassesList();
@@ -71,7 +84,8 @@ private:
     QStringList groupsList;
     QStringList classesList;
 
-    QString dataFile = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
+    //QString dataFile = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
+    QString dataFile = "";
     QJsonObject schoolData;
     QList<Room*> roomsActivityList;
 };
