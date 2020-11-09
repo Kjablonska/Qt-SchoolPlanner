@@ -24,8 +24,8 @@ public:
     Activity getValueByKey(QString key);
     void removeEntry(QString key);
 
-    QString getRoomName() { return roomName; }
-    QMap<QString, Activity> getRoomActivtiesMap() { return roomActivity; }
+    QString getRoomName() const { return roomName; }
+    QMap<QString, Activity> getRoomActivtiesMap() const { return roomActivity; }
 
 private:
     QString roomName;

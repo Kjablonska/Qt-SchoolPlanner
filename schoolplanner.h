@@ -67,6 +67,12 @@ private slots:
 
     void on_actionTeachers_triggered();
 
+    void on_actionDelete_all_data_triggered();
+
+    void on_actionNew_triggered();
+
+    void on_actionExit_triggered();
+
 private:
     Ui::SchoolPlanner *ui;
     QStandardItemModel *model;

@@ -19,12 +19,22 @@ void EditDictionary::initializeDictionary(SchoolData *schoolData, QString dictio
     this->schoolData = schoolData;
     this->dictionary = dictionary;
 
-    if (dictionary == "room")
-        ui->listWidget->addItems(schoolData->getRoomsList());
-    else if (dictionary == "group")
-        ui->listWidget->addItems(schoolData->getGroupsList());
-    else if (dictionary == "teacher")
-        ui->listWidget->addItems(schoolData->getTeachersList());
+    if (dictionary == "room") {
+        if (schoolData->getRoomsList().isEmpty())
+            ui->removeButton->setVisible(false);
+        else
+            ui->listWidget->addItems(schoolData->getRoomsList());
+    } else if (dictionary == "group") {
+        if (schoolData->getGroupsList().isEmpty())
+            ui->removeButton->setVisible(false);
+        else
+            ui->listWidget->addItems(schoolData->getGroupsList());
+    } else if (dictionary == "teacher") {
+        if (schoolData->getTeachersList().isEmpty())
+            ui->removeButton->setVisible(false);
+        else
+            ui->listWidget->addItems(schoolData->getTeachersList());
+    }
 
     QListWidgetItem * item = new QListWidgetItem("New entry");
     item->setFlags(item->flags() | Qt::ItemIsEditable);
@@ -51,18 +61,28 @@ void EditDictionary::on_addButton_clicked() {
 }
 
 void EditDictionary::on_removeButton_clicked() {
-    Warning warning("All data connected to selected entry will be removed.\nDo you want to proceed?");
-    warning.exec();
-    if (!warning.getAcceptance())
-        return;
+    QMessageBox msgBox;
+    msgBox.setText("All data connected to the selected entry will be removed.");
+    msgBox.setInformativeText("Do you want to proceed?");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    int ret = msgBox.exec();
 
-    QListWidgetItem *toRemoveItem = ui->listWidget->takeItem(ui->listWidget->currentRow());
-    QString toRemove = toRemoveItem->text();
+    switch (ret) {
+        case QMessageBox::No: {
+        QListWidgetItem *toRemoveItem = ui->listWidget->takeItem(ui->listWidget->currentRow());
+        QString toRemove = toRemoveItem->text();
 
-    if (dictionary == "room")
-        schoolData->removeRoom(toRemove);
-    else if (dictionary == "group")
-        schoolData->removeGroup(toRemove);
-    else if (dictionary == "teacher")
-        schoolData->removeTeacher(toRemove);
+        if (dictionary == "room")
+            schoolData->removeRoom(toRemove);
+        else if (dictionary == "group")
+            schoolData->removeGroup(toRemove);
+        else if (dictionary == "teacher")
+            schoolData->removeTeacher(toRemove);
+            break;
+        }
+        case QMessageBox::Yes:
+        default:
+            break;
+    }
 }

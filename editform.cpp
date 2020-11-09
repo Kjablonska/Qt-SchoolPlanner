@@ -40,8 +40,11 @@ void EditForm::setCurrentData(int column, int row, QString room, SchoolData *dat
 
 bool EditForm::checkData(QString newClas, QString newGroup, QString newTeacher) {
     if (newGroup.isEmpty() || newClas.isEmpty() || newTeacher.isEmpty()) {
-        Warning warning("You must set all data.", true);
-        warning.exec();
+        QMessageBox msgBox;
+        msgBox.setText("Error");
+        msgBox.setInformativeText("You must set all data.");
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        int ret = msgBox.exec();
         return false;
     }
     return true;

@@ -30,8 +30,7 @@ SOURCES += \
     schooldata.cpp \
     activity.cpp \
     room.cpp \
-    editdictionary.cpp \
-    warning.cpp
+    editdictionary.cpp
 
 HEADERS += \
         schoolplanner.h \
@@ -39,14 +38,12 @@ HEADERS += \
     schooldata.h \
     activity.h \
     room.h \
-    editdictionary.h \
-    warning.h
+    editdictionary.h
 
 FORMS += \
         schoolplanner.ui \
     editform.ui \
-    editdictionary.ui \
-    warning.ui
+    editdictionary.ui
 
 RESOURCES += \
     resources.qrc

@@ -10,17 +10,17 @@ public:
     Activity(QString room, QString group, QString clas, int slot, QString day, QString teacher);
     ~Activity();
 
-    QString getRoom() { return room; }
+    QString getRoom() const { return room; }
     void setRoom(QString room) { this->room = room; }
-    QString getGroup() { return group; }
+    QString getGroup() const { return group; }
     void setGroup(QString group) { this->group = group; }
-    QString getClass() {return clas; }
+    QString getClass() const { return clas; }
     void setClass(QString clas) { this-> clas = clas; }
-    int getSlot() { return slot; }
+    int getSlot() const { return slot; }
     void setSlot(int slot) { this->slot = slot; }
-    QString getDay() { return day; }
+    QString getDay() const { return day; }
     void setDay(QString day) { this->day = day; }
-    QString getTeacher() { return teacher; }
+    QString getTeacher() const { return teacher; }
     void setTeacher(QString teacher) { this->teacher = teacher; }
 
 private:
