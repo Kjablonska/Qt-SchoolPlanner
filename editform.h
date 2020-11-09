@@ -31,11 +31,8 @@ public:
     bool checkData(QString newClas, QString newGroup, QString newTeacher);
 
 private slots:
-
     void on_saveButton_clicked();
-
     void on_cancelButton_clicked();
-
     void on_unassignButton_clicked();
 
 private:

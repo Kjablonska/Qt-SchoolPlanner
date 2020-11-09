@@ -6,62 +6,47 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>352</width>
-    <height>358</height>
+    <width>322</width>
+    <height>258</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QListWidget" name="listWidget">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>20</y>
-     <width>291</width>
-     <height>271</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="addButton">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>310</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Add</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="removeButton">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>310</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Remove</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="closeButton">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>310</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Close</string>
-   </property>
-  </widget>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="listLayout">
+     <item>
+      <widget class="QListWidget" name="listWidget"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="buttonsLayout">
+     <item>
+      <widget class="QPushButton" name="addButton">
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="removeButton">
+       <property name="text">
+        <string>Remove</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="closeButton">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

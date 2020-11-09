@@ -24,7 +24,6 @@
 class SchoolData
 {
 public:
-
     QMap<QString, int> DAY_TO_INT = {
         { "Monday", 0},
         { "Tuesday", 1},
@@ -36,58 +35,46 @@ public:
 
     SchoolData();
     ~SchoolData();
-    QStringList getDataFromJson(QString data);
+
     void initializeSchoolData();
-
-    void initializeDataFromFile();
-    void initializeActivityList();
-    QList<Activity> getRoomData(QString roomName);
-
     void initializeRoomsActivityList();
+    void initializeDataFromFile();
 
     QStringList getSchoolData(QString data);
+    QList<Activity> getRoomData(QString roomName);
     Activity getSelectedData(QString roomName, int slot, QString day);
-
-    void setDataFile(QString dataFile);
-    void deleteData(QString roomName, int slot, QString day);
-    QString getDataFile();
-
     void saveDataToFile();
     QJsonArray activitiesToJson();
-
+    void deleteData(QString roomName, int slot, QString day);
     void editData(int slot, QString day, QString newClas, QString newGroup, QString newTeacher, QString roomName);
-
-    QJsonValue getActivitiesFromAllRooms();
-
     void addNewRoom(QString roomName);
     void removeRoom(QString roomName);
-
-    bool checkEditedData(int slot, QString day, QString newGroup, QString roomName);
-    void removeOvelapingData(int slot, QString day, QString newGroup, QString roomName);
-
     void removeGroup(QString groupName);
     void addNewGroup(QString groupName);
-
     void removeTeacher(QString teacherName);
     void addNewTeacher(QString teacherName);
 
-    bool checkDataCorrectness();
-
-    QStringList getRoomsList();
-    QStringList getClassesList();
-    QStringList getGroupsList();
-    QStringList getTeachersList();
+    void setDataFile(QString dataFile) { this->dataFile = dataFile; }
+    QString getDataFile() { return dataFile; }
+    QStringList getRoomsList() { return roomsList; }
+    QStringList getClassesList() { return classesList; }
+    QStringList getGroupsList() { return groupsList; }
+    QStringList getTeachersList() { return teachersList; }
 
 private:
     QStringList roomsList;
-    QStringList teachersList;
-    QStringList groupsList;
     QStringList classesList;
+    QStringList groupsList;
+    QStringList teachersList;
 
-    //QString dataFile = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
-    QString dataFile = "";
+    QString dataFile = "/home/kj/projects/elka/EGUI/lab1/SchoolPlanner/resources/data.json";
+    //QString dataFile = "";
     QJsonObject schoolData;
     QList<Room*> roomsActivityList;
+
+    bool checkEditedData(int slot, QString day, QString newGroup, QString roomName);
+    void removeOvelapingData(int slot, QString day, QString newGroup, QString roomName);
+    bool checkDataCorrectness();
 };
 
 #endif // SCHOOLDATA_H

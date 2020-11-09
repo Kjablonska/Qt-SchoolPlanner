@@ -18,7 +18,6 @@ public:
 
 private slots:
     void on_yesButton_clicked();
-
     void on_noButton_clicked();
 
 private:

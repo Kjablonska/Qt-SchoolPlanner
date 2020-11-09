@@ -6,8 +6,7 @@ Warning::Warning(QString message, bool error, QWidget *parent) :
     ui(new Ui::Warning)
 {
     ui->setupUi(this);
-    ui->textEdit->setReadOnly(true);
-    ui->textEdit->setText(message);
+    ui->label->setText(message);
 
     if (error) {
         ui->noButton->setText("OK");

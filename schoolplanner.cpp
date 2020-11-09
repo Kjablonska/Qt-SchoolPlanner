@@ -7,12 +7,11 @@ SchoolPlanner::SchoolPlanner(QWidget *parent) :
     ui->setupUi(this);
     model = new QStandardItemModel(10,5,this);
 
-    QLabel *roomLabel = new QLabel(this);
-    roomLabel->setText("Room");
-    ui->verticalLayout->addWidget(roomLabel);
-
     schoolData = new SchoolData();
     ui->tableView->setModel(model);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
     fillSchedule();
 }
 

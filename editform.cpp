@@ -18,17 +18,10 @@ void EditForm::initializeEditForm() {
     ui->classes->addItems(schoolData->getClassesList());
     ui->groups->addItems(schoolData->getGroupsList());
     ui->teachers->addItems(schoolData->getTeachersList());
-
-    QLabel *headersLabel = new QLabel(this);
-    headersLabel->setText("Room:\n\nClass:\n\nTeacher:\n\nGroup:");
-
-    ui->headers->addWidget(headersLabel);
 }
 
 void EditForm::setCurrentData(int column, int row, QString room, SchoolData *data) {
-    QLabel *roomLabel = new QLabel(this);
-    roomLabel->setText(room);
-    ui->roomName->addWidget(roomLabel);
+    ui->roomNumber->setText(room);
 
     this->schoolData = data;
     this->slot = row;
@@ -65,13 +58,11 @@ void EditForm::on_saveButton_clicked() {
     EditForm::close();
 }
 
-void EditForm::on_cancelButton_clicked()
-{
+void EditForm::on_cancelButton_clicked() {
     EditForm::close();
 }
 
-void EditForm::on_unassignButton_clicked()
-{
+void EditForm::on_unassignButton_clicked() {
     schoolData->deleteData(room, slot, day);
     EditForm::close();
 }
