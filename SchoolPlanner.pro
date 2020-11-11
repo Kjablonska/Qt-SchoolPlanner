@@ -44,6 +44,3 @@ FORMS += \
         schoolplanner.ui \
     editform.ui \
     editdictionary.ui
-
-RESOURCES += \
-    resources.qrc
