@@ -150,7 +150,7 @@ void SchoolData::editData(int slot, QString day, QString newClas, QString newGro
         QMessageBox msgBox;
         msgBox.setText("Edit data");
         msgBox.setInformativeText(
-            "Selected group or teaceher has class in different rooms at this time. If you proceed, those "
+            "Selected group or teacher has class in different rooms at this time. If you proceed, those "
             "data will be deleted.\nDo you want to proceed?");
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         msgBox.setDefaultButton(QMessageBox::No);
@@ -267,9 +267,9 @@ bool SchoolData::checkJsonActivities(QString room, QString group, QString clas, 
                                   "incorrect.\nDo you want to skip it?");
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         msgBox.setDefaultButton(QMessageBox::Yes);
-        int ret = msgBox.exec();
+        int response = msgBox.exec();
 
-        switch (ret) {
+        switch (response) {
         case QMessageBox::No:
             return true;
         case QMessageBox::Yes:

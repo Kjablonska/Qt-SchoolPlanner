@@ -66,9 +66,9 @@ void EditDictionary::on_removeButton_clicked() {
     msgBox.setInformativeText("Do you want to proceed?");
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::Yes);
-    int ret = msgBox.exec();
+    int response = msgBox.exec();
 
-    switch (ret) {
+    switch (response) {
     case QMessageBox::Yes: {
         QListWidgetItem *toRemoveItem = ui->listWidget->takeItem(ui->listWidget->currentRow());
         QString toRemove = toRemoveItem->text();

@@ -129,9 +129,9 @@ void SchoolPlanner::refreshData(QString roomName) {
 
 void SchoolPlanner::on_actionNew_triggered() {
     if (!windowFilePath().isEmpty()) {
-        int ret = QMessageBox::warning(this, tr("New"), tr("Do you want to save current changes?\n"),
-                                       QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
-        switch (ret) {
+        int response = QMessageBox::warning(this, tr("New"), tr("Do you want to save changes?\n"),
+                                            QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
+        switch (response) {
         case QMessageBox::Save:
             on_actionSave_As_triggered();
             on_actionOpen_triggered();
@@ -151,9 +151,9 @@ void SchoolPlanner::on_actionExit_triggered() {
     if (windowFilePath().isEmpty()) {
         close();
     } else {
-        int ret = QMessageBox::warning(this, tr("Close"), tr("Do you want to save current changes?\n"),
-                                       QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
-        switch (ret) {
+        int response = QMessageBox::warning(this, tr("Close"), tr("Do you want to save changes?\n"),
+                                            QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
+        switch (response) {
         case QMessageBox::Save:
             on_actionSave_triggered();
             break;
