@@ -10,7 +10,7 @@ Room::Room(QString roomName, QList<Activity> activities) {
 Room::~Room() {}
 
 void Room::initializeActivitiesMap(QList<Activity> activities) {
-    foreach (Activity activity, activities) {
+    foreach (const auto activity, activities) {
         QString key = QString::number(activity.getSlot()) + activity.getDay();
         roomActivity.insert(key, activity);
     }
@@ -38,19 +38,21 @@ void Room::removeAllActivitiesForTeacher(QString teacherName) {
     }
 }
 
-bool Room::checkForOverlapingActivities(int slot, QString day, QString group) {
+bool Room::checkForOverlapingActivities(int slot, QString day, QString group, QString teacher) {
     QString key = QString::number(slot) + day;
+    Activity activity = getValueByKey(key);
 
-    if (getValueByKey(key).getGroup() == group)
+    if (activity.getGroup() == group || activity.getTeacher() == teacher)
         return true;
 
     return false;
 }
 
-void Room::removeOverlapingActivities(int slot, QString day, QString group) {
+void Room::removeOverlapingActivities(int slot, QString day, QString group, QString teacher) {
     QString key = QString::number(slot) + day;
+    Activity activity = getValueByKey(key);
 
-    if (getValueByKey(key).getGroup() == group)
+    if (activity.getGroup() == group || activity.getTeacher() == teacher)
         removeEntry(key);
 }
 
@@ -82,14 +84,8 @@ bool Room::addEntry(QString group, QString clas, int slot, QString day, QString 
     return true;
 }
 
-QList<Activity> Room::getRoomActivities() {
-    return roomActivity.values();
-}
+QList<Activity> Room::getRoomActivities() { return roomActivity.values(); }
 
-Activity Room::getValueByKey(QString key) {
-   return roomActivity.value(key);
-}
+Activity Room::getValueByKey(QString key) { return roomActivity.value(key); }
 
-void Room::removeEntry(QString key) {
-    roomActivity.remove(key);
-}
+void Room::removeEntry(QString key) { roomActivity.remove(key); }

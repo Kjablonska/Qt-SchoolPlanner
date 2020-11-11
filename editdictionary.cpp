@@ -1,24 +1,20 @@
 #include "editdictionary.h"
 #include "ui_editdictionary.h"
 
-EditDictionary::EditDictionary(SchoolData *schoolData, QString dictionary, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::EditDictionary)
-{
+EditDictionary::EditDictionary(SchoolData *schoolData, QString dictionary, QWidget *parent)
+    : QDialog(parent), ui(new Ui::EditDictionary) {
     ui->setupUi(this);
     initializeDictionary(schoolData, dictionary);
 }
 
-EditDictionary::~EditDictionary()
-{
-    delete ui;
-}
+EditDictionary::~EditDictionary() { delete ui; }
 
 void EditDictionary::initializeDictionary(SchoolData *schoolData, QString dictionary) {
     ui->listWidget->clear();
     this->schoolData = schoolData;
     this->dictionary = dictionary;
 
+    ui->removeButton->setVisible(true);
     if (dictionary == "room") {
         if (schoolData->getRoomsList().isEmpty())
             ui->removeButton->setVisible(false);
@@ -36,15 +32,12 @@ void EditDictionary::initializeDictionary(SchoolData *schoolData, QString dictio
             ui->listWidget->addItems(schoolData->getTeachersList());
     }
 
-    QListWidgetItem * item = new QListWidgetItem("New entry");
+    QListWidgetItem *item = new QListWidgetItem("");
     item->setFlags(item->flags() | Qt::ItemIsEditable);
     ui->listWidget->addItem(item);
 }
 
-void EditDictionary::on_closeButton_clicked() {
-    EditDictionary::close();
-}
-
+void EditDictionary::on_closeButton_clicked() { EditDictionary::close(); }
 
 void EditDictionary::on_addButton_clicked() {
     QListWidgetItem *toAddItem = ui->listWidget->takeItem(ui->listWidget->currentRow());
@@ -69,7 +62,7 @@ void EditDictionary::on_removeButton_clicked() {
     int ret = msgBox.exec();
 
     switch (ret) {
-        case QMessageBox::No: {
+    case QMessageBox::Yes: {
         QListWidgetItem *toRemoveItem = ui->listWidget->takeItem(ui->listWidget->currentRow());
         QString toRemove = toRemoveItem->text();
 
@@ -79,10 +72,10 @@ void EditDictionary::on_removeButton_clicked() {
             schoolData->removeGroup(toRemove);
         else if (dictionary == "teacher")
             schoolData->removeTeacher(toRemove);
-            break;
-        }
-        case QMessageBox::Yes:
-        default:
-            break;
+        break;
+    }
+    case QMessageBox::No:
+    default:
+        break;
     }
 }

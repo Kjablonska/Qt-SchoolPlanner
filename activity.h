@@ -3,9 +3,8 @@
 
 #include <QString>
 
-class Activity
-{
-public:
+class Activity {
+  public:
     Activity();
     Activity(QString room, QString group, QString clas, int slot, QString day, QString teacher);
     ~Activity();
@@ -15,7 +14,7 @@ public:
     QString getGroup() const { return group; }
     void setGroup(QString group) { this->group = group; }
     QString getClass() const { return clas; }
-    void setClass(QString clas) { this-> clas = clas; }
+    void setClass(QString clas) { this->clas = clas; }
     int getSlot() const { return slot; }
     void setSlot(int slot) { this->slot = slot; }
     QString getDay() const { return day; }
@@ -23,7 +22,7 @@ public:
     QString getTeacher() const { return teacher; }
     void setTeacher(QString teacher) { this->teacher = teacher; }
 
-private:
+  private:
     QString room;
     QString group;
     QString clas;

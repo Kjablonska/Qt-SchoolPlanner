@@ -79,7 +79,6 @@
     <addaction name="actionRooms"/>
     <addaction name="actionGroups"/>
     <addaction name="actionTeachers"/>
-    <addaction name="actionDelete_all_data"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -120,11 +119,6 @@
   <action name="actionTeachers">
    <property name="text">
     <string>Teachers</string>
-   </property>
-  </action>
-  <action name="actionDelete_all_data">
-   <property name="text">
-    <string>Delete all data</string>
    </property>
   </action>
   <action name="actionNew">

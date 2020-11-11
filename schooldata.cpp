@@ -1,7 +1,7 @@
 #include "schooldata.h"
 
 SchoolData::SchoolData() {
-    //initializeSchoolData();
+    // initializeSchoolData();
 }
 
 SchoolData::~SchoolData() {}
@@ -22,6 +22,7 @@ void SchoolData::initializeSchoolData(QString fileName) {
     initializeDataFromFile();
 }
 
+// Takes from JSON file activities arrays, save them as Activity object and add into corresponding Room.
 void SchoolData::initializeRoomsActivityList() {
     if (roomsList.empty())
         return;
@@ -40,26 +41,7 @@ void SchoolData::initializeRoomsActivityList() {
                 QString day = activitiesJsonArray[i].toObject().value("day").toString();
                 QString teacher = activitiesJsonArray[i].toObject().value("teacher").toString();
 
-                if (room.isEmpty() || group.isEmpty() || clas.isEmpty() || (slot < 0 || slot > 9) || day.isEmpty() || teacher.isEmpty()) {
-                    QMessageBox msgBox;
-                    msgBox.setText("Incorrect data");
-                    msgBox.setInformativeText("One of 'activities' data is incorrect.\nDo you want to skip it?");
-                    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-                    msgBox.setDefaultButton(QMessageBox::Yes);
-                    int ret = msgBox.exec();
-
-                    switch (ret) {
-                        case QMessageBox::No: {
-                            Activity activity = Activity(room, group, clas, slot, day, teacher);
-                            roomActivities.append(activity);
-                            break;
-                        }
-                        case QMessageBox::Yes:
-                        default:
-                            break;
-                    }
-
-                } else {
+                if (checkJsonActivities(room, group, clas, slot, day, teacher)) {
                     Activity activity = Activity(room, group, clas, slot, day, teacher);
                     roomActivities.append(activity);
                 }
@@ -68,7 +50,6 @@ void SchoolData::initializeRoomsActivityList() {
 
         std::shared_ptr<Room> newRoom(new Room(roomsList[j], roomActivities));
         roomsActivityList.push_back(newRoom);
-        //roomsActivityList.append(newRoom);
         roomActivities.clear();
     }
 }
@@ -83,6 +64,7 @@ void SchoolData::initializeDataFromFile() {
         initializeRoomsActivityList();
 }
 
+// Reads form JSON file "data" attributes and return them as a list.
 QStringList SchoolData::getSchoolData(QString data) {
     if (schoolData.isEmpty())
         return QStringList();
@@ -97,7 +79,7 @@ QStringList SchoolData::getSchoolData(QString data) {
 }
 
 QList<Activity> SchoolData::getRoomData(QString roomName) {
-    foreach (auto &&room, roomsActivityList) {
+    foreach (const auto room, roomsActivityList) {
         if (room->getRoomName() == roomName)
             return room->getRoomActivities();
     }
@@ -106,7 +88,7 @@ QList<Activity> SchoolData::getRoomData(QString roomName) {
 }
 
 Activity SchoolData::getSelectedData(QString roomName, int slot, QString day) {
-    foreach (auto &&room, roomsActivityList) {
+    foreach (const auto room, roomsActivityList) {
         if (room->getRoomName() == roomName) {
             QString key = QString::number(slot) + day;
             return room->getValueByKey(key);
@@ -135,12 +117,12 @@ void SchoolData::saveDataToFile(QString fileName) {
 
 QJsonArray SchoolData::activitiesToJson() {
     QList<Activity> activitiesList;
-    foreach (auto &&room, roomsActivityList)
+    foreach (const auto room, roomsActivityList)
         foreach (const Activity activity, room->getRoomActivities())
             activitiesList.append(activity);
 
     QJsonArray activitiesArray;
-    foreach (Activity activity, activitiesList) {
+    foreach (const auto activity, activitiesList) {
         QJsonObject jsonObject;
         jsonObject["room"] = activity.getRoom();
         jsonObject["group"] = activity.getGroup();
@@ -155,7 +137,7 @@ QJsonArray SchoolData::activitiesToJson() {
 }
 
 void SchoolData::deleteData(QString roomName, int slot, QString day) {
-    foreach (auto &&room, roomsActivityList) {
+    foreach (const auto room, roomsActivityList) {
         if (room->getRoomName() == roomName) {
             QString key = QString::number(slot) + day;
             return room->removeEntry(key);
@@ -163,67 +145,64 @@ void SchoolData::deleteData(QString roomName, int slot, QString day) {
     }
 }
 
-void SchoolData::editData(int slot, QString day, QString newClas, QString newGroup, QString newTeacher, QString roomName) {
-    if (checkEditedData(slot, day, newGroup, roomName)) {
+void SchoolData::editData(int slot, QString day, QString newClas, QString newGroup, QString newTeacher,
+                          QString roomName) {
+    if (checkEditedData(slot, day, newGroup, newTeacher, roomName)) {
         QMessageBox msgBox;
-        //msgBox.setText("Selected group has classes in different rooms at this time. If you proceed, those data will be deleted.\n");
-        //msgBox.setInformativeText("Do you want to proceed?");
-        //msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        //msgBox.setDefaultButton(QMessageBox::No);
-        //int ret = msgBox.exec();
+        msgBox.setText("Edit data");
+        msgBox.setInformativeText(
+            "Selected group or teaceher has class in different rooms at this time. If you proceed, those "
+            "data will be deleted.\nDo you want to proceed?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::No);
+        int response = msgBox.exec();
 
-       // if (!warning.getAcceptance())
-       //     return;
-    }
-
-    bool edited = false;
-    foreach (auto &&room, roomsActivityList) {
-        if (room->getRoomName() == roomName) {
-            edited = room->editEntry(newClas, newGroup, newTeacher, slot, day);
+        switch (response) {
+        case QMessageBox::No:
+            return;
+        case QMessageBox::Yes:
+        default:
             break;
         }
     }
 
-    if (edited)
-        removeOvelapingData(slot, day, newGroup, roomName);
+    foreach (const auto room, roomsActivityList) {
+        if (room->getRoomName() == roomName) {
+            room->editEntry(newClas, newGroup, newTeacher, slot, day);
+            break;
+        }
+    }
+    removeOvelapingData(slot, day, newGroup, newTeacher, roomName);
 }
 
-
-void SchoolData::addNewRoom(QString roomName) {
-    roomsList.append(roomName);
-}
+void SchoolData::addNewRoom(QString roomName) { roomsList.append(roomName); }
 
 void SchoolData::removeRoom(QString roomName) {
     roomsList.removeOne(roomName);
 
-    foreach(auto &&room, roomsActivityList) {
+    foreach (const auto room, roomsActivityList) {
         if (room->getRoomName() == roomName) {
-            //roomsActivityList.removeOne(room);
             roomsActivityList.remove(room);
             break;
         }
     }
 }
 
-void SchoolData::addNewGroup(QString groupName) {
-    groupsList.append(groupName);
-}
+void SchoolData::addNewGroup(QString groupName) { groupsList.append(groupName); }
 
 void SchoolData::removeGroup(QString groupName) {
     groupsList.removeOne(groupName);
 
-    foreach(auto &&room, roomsActivityList)
+    foreach (const auto room, roomsActivityList)
         room->removeAllActivitiesForGroup(groupName);
 }
 
-void SchoolData::addNewTeacher(QString teacherName) {
-    teachersList.append(teacherName);
-}
+void SchoolData::addNewTeacher(QString teacherName) { teachersList.append(teacherName); }
 
 void SchoolData::removeTeacher(QString teacherName) {
     teachersList.removeOne(teacherName);
 
-    foreach(auto &&room, roomsActivityList)
+    foreach (const auto room, roomsActivityList)
         room->removeAllActivitiesForTeacher(teacherName);
 }
 
@@ -235,22 +214,27 @@ void SchoolData::clearAllData() {
     roomsActivityList.clear();
 }
 
-bool SchoolData::checkEditedData(int slot, QString day, QString newGroup, QString roomName) {
-    foreach (auto &&room, roomsActivityList) {
+bool SchoolData::checkEditedData(int slot, QString day, QString newGroup, QString newTeacher, QString roomName) {
+    foreach (const auto room, roomsActivityList) {
         if (room->getRoomName() != roomName)
-            return room->checkForOverlapingActivities(slot, day, newGroup);
+            return room->checkForOverlapingActivities(slot, day, newGroup, newTeacher);
     }
 
     return false;
 }
 
-void SchoolData::removeOvelapingData(int slot, QString day, QString newGroup, QString roomName) {
-    foreach (auto &&room, roomsActivityList) {
+// Same group can not have classes in different room at the same time.
+// If any other entry interefere with newly added activity that entry should be
+// removed.
+void SchoolData::removeOvelapingData(int slot, QString day, QString newGroup, QString newTeacher, QString roomName) {
+    foreach (const auto room, roomsActivityList) {
         if (room->getRoomName() != roomName)
-            room->removeOverlapingActivities(slot, day, newGroup);
+            room->removeOverlapingActivities(slot, day, newGroup, newTeacher);
     }
 }
 
+// If in JSON data there are no rooms, groups, classes or teachers, data is
+// assumed to be incorrect.
 bool SchoolData::checkDataCorrectness() {
     if (roomsList.isEmpty() || groupsList.isEmpty() || classesList.isEmpty() || teachersList.isEmpty()) {
         QMessageBox msgBox;
@@ -260,5 +244,31 @@ bool SchoolData::checkDataCorrectness() {
         teachersList.clear();
         return false;
     }
+    return true;
+}
+
+// If in there is any attribute missing in activity, the user is asked if this entry should be ommited or added to
+// timetable anyway.
+bool SchoolData::checkJsonActivities(QString room, QString group, QString clas, int slot, QString day,
+                                     QString teacher) {
+    if (room.isEmpty() || group.isEmpty() || clas.isEmpty() || (slot < 0 || slot > 9) || day.isEmpty() ||
+        teacher.isEmpty()) {
+        QMessageBox msgBox;
+        msgBox.setText("Incorrect data");
+        msgBox.setInformativeText("One of 'activities' data is "
+                                  "incorrect.\nDo you want to skip it?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        int ret = msgBox.exec();
+
+        switch (ret) {
+        case QMessageBox::No:
+            return true;
+        case QMessageBox::Yes:
+        default:
+            return false;
+        }
+    }
+
     return true;
 }

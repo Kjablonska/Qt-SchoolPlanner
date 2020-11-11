@@ -1,22 +1,19 @@
 #include "schoolplanner.h"
 #include "ui_schoolplanner.h"
 
-SchoolPlanner::SchoolPlanner(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::SchoolPlanner) {
+SchoolPlanner::SchoolPlanner(QWidget *parent) : QMainWindow(parent), ui(new Ui::SchoolPlanner) {
     ui->setupUi(this);
-    model = new QStandardItemModel(10,5,this);
-
+    model = new QStandardItemModel(10, 5, this);
     schoolData = new SchoolData();
     ui->tableView->setModel(model);
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
     fillSchedule();
 }
 
 SchoolPlanner::~SchoolPlanner() {
     delete ui;
+    delete schoolData;
 }
 
 void SchoolPlanner::fillSchedule() {
@@ -30,10 +27,10 @@ void SchoolPlanner::fillSchedule() {
 }
 
 void SchoolPlanner::fillRoomData(QString room) {
-
     QList<Activity> activities = schoolData->getRoomData(room);
-    foreach (Activity activity, activities) {
-        QModelIndex index = model->index(activity.getSlot(), schoolData->DAY_TO_INT.value(activity.getDay()), QModelIndex());
+    foreach (const auto activity, activities) {
+        QModelIndex index =
+            model->index(activity.getSlot(), schoolData->DAY_TO_INT.value(activity.getDay()), QModelIndex());
         model->setData(index, activity.getGroup(), Qt::EditRole);
     }
 }
@@ -41,7 +38,6 @@ void SchoolPlanner::fillRoomData(QString room) {
 void SchoolPlanner::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this, "Open file");
     QFile file(fileName);
-    //schoolData->setDataFile(fileName);
     setWindowFilePath(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QFile::Text)) {
@@ -54,9 +50,7 @@ void SchoolPlanner::on_actionOpen_triggered() {
     fillSchedule();
 }
 
-void SchoolPlanner::on_comboBox_activated(const QString &arg1) {
-    refreshData(arg1);
-}
+void SchoolPlanner::on_comboBox_activated(const QString &arg1) { refreshData(arg1); }
 
 void SchoolPlanner::clearAllData() {
     model->clear();
@@ -65,6 +59,11 @@ void SchoolPlanner::clearAllData() {
 }
 
 void SchoolPlanner::on_tableView_doubleClicked(const QModelIndex &index) {
+    if (ui->comboBox->itemText(ui->comboBox->currentIndex()).isEmpty()) {
+        QMessageBox::warning(this, "Error", "No room selected");
+        return;
+    }
+
     EditForm editForm(schoolData);
     ui->comboBox->itemText(ui->comboBox->currentIndex());
 
@@ -84,7 +83,6 @@ void SchoolPlanner::on_actionSave_As_triggered() {
     }
 
     setWindowFilePath(fileName);
-    //schoolData->setDataFile(fileName);
     file.close();
     schoolData->saveDataToFile(windowFilePath());
 }
@@ -122,28 +120,24 @@ void SchoolPlanner::refreshData(QString roomName) {
     fillRoomData(roomName);
 }
 
-void SchoolPlanner::on_actionDelete_all_data_triggered() {
-    schoolData->clearAllData();
-    refreshData(ui->comboBox->itemText(ui->comboBox->currentIndex()));
-    ui->comboBox->clear();
-}
-
 void SchoolPlanner::on_actionNew_triggered() {
-
     if (windowFilePath().isEmpty()) {
         on_actionOpen_triggered();
     } else {
-        int ret = QMessageBox::warning(this, tr("New"), tr("Do you want to save current changes?\n"), QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
+        int ret = QMessageBox::warning(this, tr("New"), tr("Do you want to save current changes?\n"),
+                                       QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
         switch (ret) {
-          case QMessageBox::Save:
-              on_actionSave_As_triggered();
-              on_actionOpen_triggered();
-              break;
-          case QMessageBox::Cancel:
-              on_actionOpen_triggered();
-              break;
-          default:
-              break;
+        case QMessageBox::Save:
+            on_actionSave_As_triggered();
+            on_actionOpen_triggered();
+            break;
+        case QMessageBox::Cancel:
+            schoolData->clearAllData();
+            refreshData(ui->comboBox->itemText(ui->comboBox->currentIndex()));
+            ui->comboBox->clear();
+            break;
+        default:
+            break;
         }
     }
 }
@@ -152,17 +146,17 @@ void SchoolPlanner::on_actionExit_triggered() {
     if (windowFilePath().isEmpty()) {
         close();
     } else {
-        int ret = QMessageBox::warning(this, tr("Close"), tr("Do you want to save current changes?\n"), QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
+        int ret = QMessageBox::warning(this, tr("Close"), tr("Do you want to save current changes?\n"),
+                                       QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
         switch (ret) {
-          case QMessageBox::Save:
-              on_actionSave_As_triggered();
-              on_actionOpen_triggered();
-              break;
-          case QMessageBox::Cancel:
-              on_actionOpen_triggered();
-              break;
-          default:
-              break;
+        case QMessageBox::Save:
+            on_actionSave_triggered();
+            break;
+        case QMessageBox::Cancel:
+            close();
+            break;
+        default:
+            break;
         }
     }
 }

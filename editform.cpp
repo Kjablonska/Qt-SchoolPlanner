@@ -1,18 +1,13 @@
 #include "editform.h"
 #include "ui_editform.h"
 
-EditForm::EditForm(SchoolData *schoolData, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::EditForm)
-{
+EditForm::EditForm(SchoolData *schoolData, QWidget *parent) : QDialog(parent), ui(new Ui::EditForm) {
     ui->setupUi(this);
     this->schoolData = schoolData;
     initializeEditForm();
 }
 
-EditForm::~EditForm() {
-    delete ui;
-}
+EditForm::~EditForm() { delete ui; }
 
 void EditForm::initializeEditForm() {
     ui->classes->addItems(schoolData->getClassesList());
@@ -44,7 +39,7 @@ bool EditForm::checkData(QString newClas, QString newGroup, QString newTeacher) 
         msgBox.setText("Error");
         msgBox.setInformativeText("You must set all data.");
         msgBox.setDefaultButton(QMessageBox::Ok);
-        int ret = msgBox.exec();
+        msgBox.exec();
         return false;
     }
     return true;
@@ -61,9 +56,7 @@ void EditForm::on_saveButton_clicked() {
     EditForm::close();
 }
 
-void EditForm::on_cancelButton_clicked() {
-    EditForm::close();
-}
+void EditForm::on_cancelButton_clicked() { EditForm::close(); }
 
 void EditForm::on_unassignButton_clicked() {
     schoolData->deleteData(room, slot, day);
