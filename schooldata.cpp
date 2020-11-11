@@ -118,8 +118,7 @@ void SchoolData::saveDataToFile(QString fileName) {
 QJsonArray SchoolData::activitiesToJson() {
     QList<Activity> activitiesList;
     foreach (const auto room, roomsActivityList)
-        foreach (const Activity activity, room->getRoomActivities())
-            activitiesList.append(activity);
+        activitiesList = activitiesList + room->getRoomActivities();
 
     QJsonArray activitiesArray;
     foreach (const auto activity, activitiesList) {
@@ -204,6 +203,15 @@ void SchoolData::removeTeacher(QString teacherName) {
 
     foreach (const auto room, roomsActivityList)
         room->removeAllActivitiesForTeacher(teacherName);
+}
+
+void SchoolData::addNewClass(QString className) { classesList.append(className); }
+
+void SchoolData::removeClass(QString className) {
+    classesList.removeOne(className);
+
+    foreach (const auto room, roomsActivityList)
+        room->removeAllActivitiesForClass(className);
 }
 
 void SchoolData::clearAllData() {

@@ -79,6 +79,7 @@
     <addaction name="actionRooms"/>
     <addaction name="actionGroups"/>
     <addaction name="actionTeachers"/>
+    <addaction name="actionClasses"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -129,6 +130,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionClasses">
+   <property name="text">
+    <string>Classes</string>
    </property>
   </action>
  </widget>

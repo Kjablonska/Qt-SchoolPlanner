@@ -18,23 +18,31 @@ void Room::initializeActivitiesMap(QList<Activity> activities) {
 
 void Room::removeAllActivitiesForGroup(QString groupName) {
     QMap<QString, Activity>::iterator iter = roomActivity.begin();
-    for (iter = roomActivity.begin(); iter != roomActivity.end(); iter++) {
+    while (iter != roomActivity.end()) {
         if (iter.value().getGroup() == groupName)
-            removeEntry(iter.key());
-
-        if (roomActivity.isEmpty())
-            return;
+            iter = roomActivity.erase(iter);
+        else
+            iter++;
     }
 }
 
 void Room::removeAllActivitiesForTeacher(QString teacherName) {
     QMap<QString, Activity>::iterator iter = roomActivity.begin();
-    for (iter = roomActivity.begin(); iter != roomActivity.end(); iter++) {
+    while (iter != roomActivity.end()) {
         if (iter.value().getTeacher() == teacherName)
-            removeEntry(iter.key());
+            iter = roomActivity.erase(iter);
+        else
+            iter++;
+    }
+}
 
-        if (roomActivity.isEmpty())
-            return;
+void Room::removeAllActivitiesForClass(QString className) {
+    QMap<QString, Activity>::iterator iter = roomActivity.begin();
+    while (iter != roomActivity.end()) {
+        if (iter.value().getClass() == className)
+            iter = roomActivity.erase(iter);
+        else
+            iter++;
     }
 }
 
@@ -68,7 +76,6 @@ bool Room::editEntry(QString newClas, QString newGroup, QString newTeacher, int 
             iter.value().setClass(newClas);
             iter.value().setGroup(newGroup);
             iter.value().setTeacher(newTeacher);
-
             return true;
         }
     }

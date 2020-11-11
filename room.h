@@ -13,6 +13,7 @@ class Room {
     void initializeActivitiesMap(QList<Activity> activities);
     void removeAllActivitiesForGroup(QString groupName);
     void removeAllActivitiesForTeacher(QString teacherName);
+    void removeAllActivitiesForClass(QString className);
     bool checkForOverlapingActivities(int slot, QString day, QString group, QString teacher);
     void removeOverlapingActivities(int slot, QString day, QString group, QString teacher);
     bool editEntry(QString newClas, QString newGroup, QString newTeacher, int slot, QString day);

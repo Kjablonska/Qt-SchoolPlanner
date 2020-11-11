@@ -30,6 +30,11 @@ void EditDictionary::initializeDictionary(SchoolData *schoolData, QString dictio
             ui->removeButton->setVisible(false);
         else
             ui->listWidget->addItems(schoolData->getTeachersList());
+    } else if (dictionary == "class") {
+        if (schoolData->getClassesList().isEmpty())
+            ui->removeButton->setVisible(false);
+        else
+            ui->listWidget->addItems(schoolData->getClassesList());
     }
 
     QListWidgetItem *item = new QListWidgetItem("");
@@ -49,6 +54,8 @@ void EditDictionary::on_addButton_clicked() {
         schoolData->addNewGroup(toAdd);
     else if (dictionary == "teacher")
         schoolData->addNewTeacher(toAdd);
+    else if (dictionary == "class")
+        schoolData->addNewClass(toAdd);
 
     initializeDictionary(schoolData, dictionary);
 }
@@ -72,6 +79,8 @@ void EditDictionary::on_removeButton_clicked() {
             schoolData->removeGroup(toRemove);
         else if (dictionary == "teacher")
             schoolData->removeTeacher(toRemove);
+        else if (dictionary == "class")
+            schoolData->removeClass(toRemove);
         break;
     }
     case QMessageBox::No:

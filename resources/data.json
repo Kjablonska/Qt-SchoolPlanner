@@ -1,40 +1,15 @@
 {
     "activities": [
         {
-            "class": "mat",
-            "day": "Monday",
-            "group": "1a",
-            "room": "110",
-            "slot": 1,
-            "teacher": "kowalski"
-        },
-        {
-            "class": "geo",
-            "day": "Tuesday",
-            "group": "2b",
-            "room": "110",
-            "slot": 2,
-            "teacher": "nowak"
-        },
-        {
             "class": "eng",
-            "day": "Thursday",
+            "day": "Monday",
             "group": "1b",
             "room": "110",
-            "slot": 3,
-            "teacher": "nowak"
-        },
-        {
-            "class": "eng",
-            "day": "Friday",
-            "group": "1c",
-            "room": "121",
-            "slot": 3,
+            "slot": 4,
             "teacher": "nowak"
         }
     ],
     "classes": [
-        "mat",
         "geo",
         "eng",
         "phys",

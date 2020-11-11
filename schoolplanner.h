@@ -57,6 +57,8 @@ class SchoolPlanner : public QMainWindow {
     void on_actionNew_triggered();
     void on_actionExit_triggered();
 
+    void on_actionClasses_triggered();
+
   private:
     Ui::SchoolPlanner *ui;
     QStandardItemModel *model;

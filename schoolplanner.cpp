@@ -18,11 +18,11 @@ SchoolPlanner::~SchoolPlanner() {
 
 void SchoolPlanner::fillSchedule() {
     clearAllData();
+    schoolData->initializeSchoolData(windowFilePath());
     ui->comboBox->clear();
     ui->comboBox->addItems(schoolData->getRoomsList());
     QString room = ui->comboBox->itemText(ui->comboBox->currentIndex());
 
-    schoolData->initializeSchoolData(windowFilePath());
     fillRoomData(room);
 }
 
@@ -46,7 +46,7 @@ void SchoolPlanner::on_actionOpen_triggered() {
     }
 
     file.close();
-    schoolData->initializeSchoolData(windowFilePath());
+
     fillSchedule();
 }
 
@@ -90,6 +90,7 @@ void SchoolPlanner::on_actionSave_As_triggered() {
 void SchoolPlanner::on_actionSave_triggered() {
     if (windowFilePath().isEmpty()) {
         on_actionSave_As_triggered();
+        return;
     }
     schoolData->saveDataToFile(windowFilePath());
 }
@@ -115,15 +116,19 @@ void SchoolPlanner::on_actionTeachers_triggered() {
     refreshData(ui->comboBox->itemText(ui->comboBox->currentIndex()));
 }
 
+void SchoolPlanner::on_actionClasses_triggered() {
+    EditDictionary editDictionary(schoolData, "class");
+    editDictionary.exec();
+    refreshData(ui->comboBox->itemText(ui->comboBox->currentIndex()));
+}
+
 void SchoolPlanner::refreshData(QString roomName) {
     clearAllData();
     fillRoomData(roomName);
 }
 
 void SchoolPlanner::on_actionNew_triggered() {
-    if (windowFilePath().isEmpty()) {
-        on_actionOpen_triggered();
-    } else {
+    if (!windowFilePath().isEmpty()) {
         int ret = QMessageBox::warning(this, tr("New"), tr("Do you want to save current changes?\n"),
                                        QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
         switch (ret) {

@@ -26,7 +26,6 @@ class SchoolData {
     void initializeSchoolData(QString fileName);
     void initializeRoomsActivityList();
     void initializeDataFromFile();
-
     QStringList getSchoolData(QString data);
     QList<Activity> getRoomData(QString roomName);
     Activity getSelectedData(QString roomName, int slot, QString day);
@@ -40,6 +39,8 @@ class SchoolData {
     void addNewGroup(QString groupName);
     void removeTeacher(QString teacherName);
     void addNewTeacher(QString teacherName);
+    void addNewClass(QString className);
+    void removeClass(QString className);
     void clearAllData();
 
     QStringList getRoomsList() const { return roomsList; }
