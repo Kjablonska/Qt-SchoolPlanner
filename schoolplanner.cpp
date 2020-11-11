@@ -35,6 +35,34 @@ void SchoolPlanner::fillRoomData(QString room) {
     }
 }
 
+void SchoolPlanner::saveData() {
+    if (windowFilePath().isEmpty()) {
+        saveDataAs();
+        return;
+    }
+    schoolData->saveDataToFile(windowFilePath());
+}
+
+void SchoolPlanner::saveDataAs() {
+    QString fileName = QFileDialog::getOpenFileName(this, "Select file.");
+    QFile file(fileName);
+
+    if (!file.open(QIODevice::WriteOnly | QFile::Text)) {
+        QMessageBox::warning(this, "Warning", "Can not save to file :" + file.errorString());
+        return;
+    }
+
+    setWindowFilePath(fileName);
+    file.close();
+    schoolData->saveDataToFile(windowFilePath());
+}
+
+void SchoolPlanner::clearAllData() {
+    model->clear();
+    model->setHorizontalHeaderLabels(HORIZONTAL_LABELS);
+    model->setVerticalHeaderLabels(VERTICAL_LABELS);
+}
+
 void SchoolPlanner::on_actionOpen_triggered() {
     QString fileName = QFileDialog::getOpenFileName(this, "Open file");
     QFile file(fileName);
@@ -46,17 +74,10 @@ void SchoolPlanner::on_actionOpen_triggered() {
     }
 
     file.close();
-
     fillSchedule();
 }
 
 void SchoolPlanner::on_comboBox_activated(const QString &arg1) { refreshData(arg1); }
-
-void SchoolPlanner::clearAllData() {
-    model->clear();
-    model->setHorizontalHeaderLabels(HORIZONTAL_LABELS);
-    model->setVerticalHeaderLabels(VERTICAL_LABELS);
-}
 
 void SchoolPlanner::on_tableView_doubleClicked(const QModelIndex &index) {
     if (ui->comboBox->itemText(ui->comboBox->currentIndex()).isEmpty()) {
@@ -73,27 +94,9 @@ void SchoolPlanner::on_tableView_doubleClicked(const QModelIndex &index) {
     refreshData(roomName);
 }
 
-void SchoolPlanner::on_actionSave_As_triggered() {
-    QString fileName = QFileDialog::getOpenFileName(this, "Select file.");
-    QFile file(fileName);
+void SchoolPlanner::on_actionSave_triggered() { saveData(); }
 
-    if (!file.open(QIODevice::WriteOnly | QFile::Text)) {
-        QMessageBox::warning(this, "Warning", "Can not save to file :" + file.errorString());
-        return;
-    }
-
-    setWindowFilePath(fileName);
-    file.close();
-    schoolData->saveDataToFile(windowFilePath());
-}
-
-void SchoolPlanner::on_actionSave_triggered() {
-    if (windowFilePath().isEmpty()) {
-        on_actionSave_As_triggered();
-        return;
-    }
-    schoolData->saveDataToFile(windowFilePath());
-}
+void SchoolPlanner::on_actionSave_As_triggered() { saveDataAs(); }
 
 void SchoolPlanner::on_actionRooms_triggered() {
     EditDictionary editDictionary(schoolData, "room");
@@ -133,9 +136,8 @@ void SchoolPlanner::on_actionNew_triggered() {
                                             QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
         switch (response) {
         case QMessageBox::Save:
-            on_actionSave_As_triggered();
-            on_actionOpen_triggered();
-            break;
+            saveData();
+            // FALLTHROUGH
         case QMessageBox::Cancel:
             schoolData->clearAllData();
             refreshData(ui->comboBox->itemText(ui->comboBox->currentIndex()));
@@ -155,7 +157,7 @@ void SchoolPlanner::on_actionExit_triggered() {
                                             QMessageBox::Save | QMessageBox::Cancel, QMessageBox::Save);
         switch (response) {
         case QMessageBox::Save:
-            on_actionSave_triggered();
+            saveData();
             break;
         case QMessageBox::Cancel:
             close();

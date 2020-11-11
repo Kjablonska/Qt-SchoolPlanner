@@ -42,27 +42,29 @@ class SchoolPlanner : public QMainWindow {
     void initializeJsonDocument();
     void fillSchedule();
     void fillRoomData(QString room);
-    void clearAllData();
     void refreshData(QString roomName);
 
   private slots:
     void on_actionOpen_triggered();
     void on_comboBox_activated(const QString &arg1);
     void on_tableView_doubleClicked(const QModelIndex &index);
-    void on_actionSave_As_triggered();
     void on_actionSave_triggered();
+    void on_actionSave_As_triggered();
     void on_actionRooms_triggered();
     void on_actionGroups_triggered();
     void on_actionTeachers_triggered();
     void on_actionNew_triggered();
     void on_actionExit_triggered();
-
     void on_actionClasses_triggered();
 
   private:
     Ui::SchoolPlanner *ui;
     QStandardItemModel *model;
     SchoolData *schoolData;
+
+    void saveData();
+    void saveDataAs();
+    void clearAllData();
 };
 
 #endif // SCHOOLPLANNER_H
