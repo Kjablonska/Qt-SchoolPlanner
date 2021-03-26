@@ -1,10 +1,12 @@
 # Qt-SchoolPlanner
 
 ## build&run:
-mkdir build; cd build;
-qmake ../SchoolPlanner.pro
-make
-./SchoolPlanner
+```sh
+mkdir build; cd build;  
+qmake ../SchoolPlanner.pro  
+make  
+./SchoolPlanner  
+```
 
 ## Descritption  
   
